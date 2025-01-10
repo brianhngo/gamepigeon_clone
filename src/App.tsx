@@ -1,7 +1,11 @@
 import "./App.css";
-
+import Homepage from "./Homepage/homepage";
 function App() {
-  return <p className='text-2xl text-green-700'>Hello</p>;
+  return (
+    <body className='w-screen h-screen bg-gradient-to-br from-purple-600 via-red-500 to-green-400 '>
+      <Homepage />
+    </body>
+  );
 }
 
 export default App;
