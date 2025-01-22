@@ -20,9 +20,9 @@ class Match(models.Model):
 class User(models.Model):
   user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
   username = models.CharField(max_length = 18, unique = True )
-  password = models.CharField(max_length = 18, editable = True)
-  record = models.TextField(max_length= 100, editable = True )
-  mmr = models.IntegerField(default=0, editable= True)
+  password = models.CharField(max_length = 120, editable = True)
+  record = models.TextField(max_length= 100, editable = True, default = '0W-0L' )
+  mmr = models.IntegerField( editable= True, default = '1000')
 
   def _str_(self):
      return f"User {self.user_id} record {self.record}"
