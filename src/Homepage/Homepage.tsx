@@ -1,20 +1,50 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import SocialMedia from "./SocialMedia";
+import LoginModal from "../UserAuth/LoginModal.tsx";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 export default function Homepage() {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+
+  const setModalTrue = useCallback(() => {
+    console.log("hi");
+    setIsLoginModalOpen(true);
+  }, []);
+
+  const setModalFalse = useCallback(() => {
+    setIsLoginModalOpen(false);
+  }, []);
+
   return (
     <div className='w-full h-full flex flex-col'>
       {/* Header */}
       <nav className='flex flex-row-reverse m-3'>
         <button
+          onClick={setModalTrue}
           type='button'
-          className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
+          className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
           Login
         </button>
       </nav>
 
       {/* Body */}
       <div className='flex-1 flex flex-col items-center justify-center'>
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onRequestClose={setModalFalse}
+          style={customStyles}
+          contentLabel='Login Modal'
+        />
         <section className='text-center mb-4'>
           <h1 className='text-7xl font-semibold'>GameFlock</h1>
           <p className='text-2xl mt-3'>Challenge. Play. Win.</p>
