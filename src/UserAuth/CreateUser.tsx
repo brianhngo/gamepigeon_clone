@@ -19,7 +19,7 @@ export default function CreateUser({ changeSignIn }: CreateUserProp) {
   const onChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
-      console.log(name, value);
+
       setFormData((prev) => ({
         ...prev,
         [name]: value,
@@ -35,9 +35,7 @@ export default function CreateUser({ changeSignIn }: CreateUserProp) {
       password2: "",
     });
   };
-  const onSubmitHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onSubmitHandler = async (event: any) => {
     try {
       event.preventDefault();
       // Need to check conditions
@@ -48,7 +46,7 @@ export default function CreateUser({ changeSignIn }: CreateUserProp) {
       ) {
         return;
       }
-
+      console.log("hi");
       const { data } = await axios.post(
         "http://localhost:8000/api/users/create_user",
         formData,
@@ -56,7 +54,6 @@ export default function CreateUser({ changeSignIn }: CreateUserProp) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Origin: "http://localhost:5173",
           },
         }
       );
@@ -65,15 +62,15 @@ export default function CreateUser({ changeSignIn }: CreateUserProp) {
         console.log("sucessfully added");
         resetFormData();
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error2) {
+      console.error(error2);
     }
   };
 
   return (
     <>
       <h2 className='text-2xl font-semibold text-center mb-4'>Create User</h2>
-      <form className='space-y-4' onSubmit={() => onSubmitHandler}>
+      <form className='space-y-4' onSubmit={(event) => onSubmitHandler(event)}>
         <div>
           <label
             htmlFor='email'
