@@ -6,6 +6,10 @@ from .models import User,Match
 from .serializer import UserSerializer, MatchSerializer
 from django.contrib.auth.hashers import make_password, check_password
 import json
+from .utils import  generate_jwt, decode_jwt
+
+
+
 
 @api_view(['GET'])
 def get_user(request):
@@ -43,7 +47,6 @@ def create_user(request):
 @api_view(['POST'])
 def login_User(request):
   try:
-    print('hi')
     body = json.loads(request.body)
     email = body.get('email')
     password = body.get('password')
@@ -51,13 +54,14 @@ def login_User(request):
     if (not email or not password):
       return Response({"Error" : 'Email and password are required'}, status = 400)
     
-    user_info = User.objects.get(username = email)
+    user_info = User.objects.filter(username = email).first()
 
     if user_info:
       is_validated = check_password(password,user_info.password)
       if is_validated:
-     
-       return Response('User is validated', status = 200)
+        user_token = generate_jwt(user_info)
+       
+        return Response({'token':user_token}, status = 200)
     else :
       return Response({"Error": "Invalid credentials"}, status=401)
   except json.JSONDecodeError:
