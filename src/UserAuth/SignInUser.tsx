@@ -1,10 +1,55 @@
-import React from "react";
+import axios from "axios";
+import React, { useState, useCallback } from "react";
 
 interface SignInUserProp {
   changeSignIn: () => void;
 }
 
 export default function SignInUser({ changeSignIn }: SignInUserProp) {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const formDataHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    },
+    []
+  );
+
+  const submitHandler = useCallback(async (event: any) => {
+    try {
+      event.preventDefault();
+
+      if (formData.email.length < 1 || formData.password.length < 1) {
+        return;
+      }
+
+      const { data } = await axios.post(
+        "http://localhost:8000/api/users/login_user",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (data) {
+        console.log("Sucessfully Logged in");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   return (
     <>
       <h2 className='text-2xl font-semibold text-center mb-4'>Login</h2>
@@ -16,6 +61,8 @@ export default function SignInUser({ changeSignIn }: SignInUserProp) {
             Email
           </label>
           <input
+            value={formData.email}
+            onChange={(event) => formDataHandler(event)}
             type='email'
             id='email'
             name='email'
@@ -30,6 +77,8 @@ export default function SignInUser({ changeSignIn }: SignInUserProp) {
             Password
           </label>
           <input
+            value={formData.password}
+            onChange={(event) => formDataHandler(event)}
             type='password'
             id='password'
             name='password'
@@ -38,6 +87,7 @@ export default function SignInUser({ changeSignIn }: SignInUserProp) {
           />
         </div>
         <button
+          onClick={(event) => submitHandler(event)}
           type='submit'
           className='w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'>
           Login

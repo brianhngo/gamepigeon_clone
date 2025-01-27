@@ -4,6 +4,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from .models import User,Match
 from .serializer import UserSerializer, MatchSerializer
+from django.contrib.auth.hashers import make_password, check_password
 import json
 
 @api_view(['GET'])
@@ -26,7 +27,7 @@ def create_user(request):
 
     new_user = UserSerializer(data={
             'username': email, 
-            'password': password1,
+            'password': make_password(password1),
         })
  
 
@@ -39,6 +40,28 @@ def create_user(request):
   except json.JSONDecodeError:
     return Response({"Error" : 'Server is down'}, status = 500)
 
+@api_view(['POST'])
+def login_User(request):
+  try:
+    print('hi')
+    body = json.loads(request.body)
+    email = body.get('email')
+    password = body.get('password')
+
+    if (not email or not password):
+      return Response({"Error" : 'Email and password are required'}, status = 400)
+    
+    user_info = User.objects.get(username = email)
+
+    if user_info:
+      is_validated = check_password(password,user_info.password)
+      if is_validated:
+     
+       return Response('User is validated', status = 200)
+    else :
+      return Response({"Error": "Invalid credentials"}, status=401)
+  except json.JSONDecodeError:
+     return Response({"Error" : 'Server is down'}, status = 500)
 
 @api_view(['GET'])
 def get_Users(request):
