@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import CreateUser from "./CreateUser";
@@ -11,6 +11,7 @@ interface LoginModalProps {
   onRequestClose: () => void;
   style?: Modal.styles;
   contentLabel: string;
+  setIsUserSignedIn: () => void;
 }
 
 export default function LoginModal({
@@ -18,6 +19,7 @@ export default function LoginModal({
   onRequestClose,
   style,
   contentLabel,
+  setIsUserSignedIn,
 }: LoginModalProps) {
   // T => Sign in, F => Create User
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
@@ -37,7 +39,11 @@ export default function LoginModal({
       </button>
 
       {isSignIn ? (
-        <SignInUser changeSignIn={() => setIsSignIn(false)} />
+        <SignInUser
+          changeSignIn={() => setIsSignIn(false)}
+          onRequestClose={onRequestClose}
+          setIsUserSignedIn={setIsUserSignedIn}
+        />
       ) : (
         <CreateUser changeSignIn={() => setIsSignIn(true)} />
       )}

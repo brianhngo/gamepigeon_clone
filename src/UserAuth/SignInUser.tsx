@@ -3,10 +3,19 @@ import React, { useState, useCallback } from "react";
 
 interface SignInUserProp {
   changeSignIn: () => void;
+  onRequestClose: () => void;
+  setIsUserSignedIn: (arg0: boolean) => void;
 }
 
-export default function SignInUser({ changeSignIn }: SignInUserProp) {
-  const [formData, setFormData] = useState({
+export default function SignInUser({
+  changeSignIn,
+  onRequestClose,
+  setIsUserSignedIn,
+}: SignInUserProp) {
+  const [formData, setFormData] = useState<{
+    email: string;
+    password: string;
+  }>({
     email: "",
     password: "",
   });
@@ -15,40 +24,47 @@ export default function SignInUser({ changeSignIn }: SignInUserProp) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
 
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      setFormData((prevData) => {
+        return {
+          ...prevData,
+          [name]: value,
+        };
+      });
     },
     []
   );
 
-  const submitHandler = useCallback(async (event: any) => {
-    try {
-      event.preventDefault();
+  const submitHandler = useCallback(
+    async (event: any) => {
+      try {
+        event.preventDefault();
 
-      if (formData.email.length < 1 || formData.password.length < 1) {
-        return;
-      }
-
-      const { data } = await axios.post(
-        "http://localhost:8000/api/users/login_user",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+        if (formData.email.length < 1 || formData.password.length < 1) {
+          return;
         }
-      );
 
-      if (data) {
-        console.log("Sucessfully Logged in");
+        const { data } = await axios.post(
+          "http://localhost:8000/api/users/login_user",
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (data.token) {
+          sessionStorage.setItem("auth_token", data.token);
+          setIsUserSignedIn(true);
+          onRequestClose();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+    },
+    [formData]
+  );
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import SocialMedia from "./SocialMedia";
 import LoginModal from "../UserAuth/LoginModal.tsx";
 
@@ -14,10 +14,10 @@ const customStyles = {
 };
 
 export default function Homepage() {
+  const [isUserSignedIn, setIsUserSignedIn] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const setModalTrue = useCallback(() => {
-    console.log("hi");
     setIsLoginModalOpen(true);
   }, []);
 
@@ -25,21 +25,47 @@ export default function Homepage() {
     setIsLoginModalOpen(false);
   }, []);
 
+  useEffect(() => {
+    if (sessionStorage.getItem("auth_token")) {
+      setIsUserSignedIn(true);
+    }
+  }, []);
+
   return (
     <div className='w-full h-full flex flex-col'>
       {/* Header */}
       <nav className='flex flex-row-reverse m-3'>
-        <button
-          onClick={setModalTrue}
-          type='button'
-          className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
-          Login
-        </button>
+        {isUserSignedIn ? (
+          <>
+            <button
+              type='button'
+              className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
+              Profile
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("auth_token");
+                setIsUserSignedIn(false);
+              }}
+              type='button'
+              className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
+              Logout
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={setModalTrue}
+            type='button'
+            className='text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1'>
+            Login
+          </button>
+        )}
       </nav>
 
       {/* Body */}
       <div className='flex-1 flex flex-col items-center justify-center'>
         <LoginModal
+          setIsUserSignedIn={setIsUserSignedIn}
           isOpen={isLoginModalOpen}
           onRequestClose={setModalFalse}
           style={customStyles}
