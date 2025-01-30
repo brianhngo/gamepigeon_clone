@@ -3,7 +3,7 @@ import { gameBoard } from "./Utils.js";
 
 export default function Gameboard() {
   return (
-    <section className='flex justify-center items-center w-screen h-screen'>
+    <section className='flex justify-center items-center '>
       <div className='grid grid-cols-8 border-4 border-black'>
         {gameBoard.map((row, rowIndex) =>
           row.map((column, columnIndex) => (
