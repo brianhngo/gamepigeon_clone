@@ -2,7 +2,7 @@ import "./App.css";
 import Checkers from "./Game/Checkers";
 import Homepage from "./Homepage/Homepage";
 import { Routes, Route } from "react-router-dom";
-import Menu from "./Homepage/Menu";
+import Menu from "./Homepage/Menu/Menu.tsx";
 
 function App() {
   return (
