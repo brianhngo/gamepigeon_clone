@@ -3,8 +3,10 @@ import GameSelection from "./GameSelection";
 import Opponents from "./Opponents";
 import GameDifficulty from "./GameDifficulty";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Menu() {
+  const navigate = useNavigate();
   const games: string[] = ["Checkers", "Chess"];
   const opponents: string[] = ["AI", "PvP"];
   const difficulties: string[] = ["Easy", "Medium", "Hard"];
@@ -30,11 +32,11 @@ export default function Menu() {
     }
   };
 
-  const letsPlayHandler = (event: any) => {
+  const letsPlayHandler = async (event: any) => {
     try {
       event.preventDefault();
-      const { data } = axios.post(
-        "http://localhost:8000/api/users/game_queue",
+      const { data } = await axios.post(
+        "http://localhost:8000/api/games/join",
         userSelection,
         {
           headers: {
@@ -43,6 +45,14 @@ export default function Menu() {
           },
         }
       );
+
+      if (data.message) {
+        // 'PvP
+        navigate("/queue");
+      } else {
+        // AI
+        navigate("/checkers");
+      }
     } catch (error) {
       console.error(error);
     }

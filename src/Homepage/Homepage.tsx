@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import SocialMedia from "./SocialMedia";
 import LoginModal from "../UserAuth/LoginModal.tsx";
+import { useNavigate } from "react-router-dom";
 
 const customStyles = {
   content: {
@@ -14,6 +15,7 @@ const customStyles = {
 };
 
 export default function Homepage() {
+  const navigate = useNavigate();
   const [isUserSignedIn, setIsUserSignedIn] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
@@ -76,7 +78,9 @@ export default function Homepage() {
           <p className='text-2xl mt-3'>Challenge. Play. Win.</p>
         </section>
         <section className='flex flex-col gap-4 mb-4 mt-4'>
-          <button className='px-4 py-2 group transition-all duration-500 hover:-translate-y-2 text-lg bg-gray-200 rounded-lg'>
+          <button
+            onClick={() => navigate("/menu")}
+            className='px-4 py-2 group transition-all duration-500 hover:-translate-y-2 text-lg bg-gray-200 rounded-lg'>
             Play
           </button>
           <button className='px-4 py-2 group transition-all duration-500 hover:-translate-y-2 text-lg bg-gray-200 rounded-lg'>
