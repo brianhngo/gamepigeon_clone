@@ -35,9 +35,15 @@ export default function Menu() {
   const letsPlayHandler = async (event: any) => {
     try {
       event.preventDefault();
+      console.log("hi");
       const { data } = await axios.post(
         "http://localhost:8000/api/games/join",
-        userSelection,
+        {
+          game: userSelection.game,
+          opponent: userSelection.opponent,
+          difficulty: userSelection.difficulty,
+          user: sessionStorage.getItem("token") || "",
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -86,7 +92,7 @@ export default function Menu() {
         userSelection.opponent === "AI" &&
         userSelection.difficulty.length > 1) ? (
         <button
-          onClick={() => letsPlayHandler}
+          onClick={(event) => letsPlayHandler(event)}
           className='text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
           {" "}
           Lets Play

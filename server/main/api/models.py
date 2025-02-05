@@ -11,9 +11,9 @@ class Match(models.Model):
     ]
     game = models.CharField(max_length=50, choices=GAME_CHOICES)
     users = models.JSONField()
-    winner = models.CharField(max_length=255)
-    loser = models.CharField(max_length=255)
-    date = models.DateField()
+    winner = models.CharField(max_length=255,blank = True, null = True)
+    loser = models.CharField(max_length=255, blank = True, null = True)
+    date = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"Match {self.gameId} - {self.game}"
 

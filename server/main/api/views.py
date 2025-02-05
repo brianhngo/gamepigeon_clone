@@ -86,9 +86,9 @@ regChess_queue = []  # For Chess queue
 
 
 def get_game_queue(game):
-    if game == 'checkers':
+    if game == 'Checkers':
         return regCheckers_queue
-    elif game == 'chess':
+    elif game == 'Chess':
         return regChess_queue
     else:
         return None
@@ -97,30 +97,29 @@ def get_game_queue(game):
 def join_game(request):
     try:
         body = json.loads(request.body)
-        game = body.get('game')
+        game = body.get('game').lower()
         opponent = body.get('opponent')
         difficulty = body.get('difficulty')
         user = body.get('user')
-
+        
         if not game:
             return Response({'Error': 'Error! Game must be selected'}, status=400)
 
         if opponent == 'AI':
-            # AI match setup
             newMatch = MatchSerializer(data={
                 'game': game,
                 'users': {
                     'user1': user,
-                    'user2': difficulty  # AI difficulty
+                    'user2': difficulty  
                 },
-                'winner': '',
-                'loser': ''
+                  
             })
-
+           
             if newMatch.is_valid():
                 newMatch.save()
                 return Response(newMatch.data, status=201)  
             else:
+                print(newMatch.errors)
                 return Response(newMatch.errors, status=400)
 
         else:
@@ -140,8 +139,7 @@ def join_game(request):
                         'user1': user,
                         'user2': opponent_user
                     },
-                    'winner': '',
-                    'loser': ''
+                    
                 })
 
                 if newMatch.is_valid():
@@ -158,6 +156,7 @@ def join_game(request):
         return Response({"Error": "Invalid JSON format"}, status=400)
 
     except Exception as e:
+        print(e)
         return Response({"Error": str(e)}, status=500)
 
     
