@@ -41,7 +41,7 @@ def create_user(request):
     
     return Response(new_user.errors, status = 400)
   except json.JSONDecodeError:
-    return Response({"Error" : 'Server is down'}, status = 500)
+    return Response({"Error" : 'Server is down. try again later'}, status = 500)
 
 @api_view(['POST'])
 def login_User(request):
