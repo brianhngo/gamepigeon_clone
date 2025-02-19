@@ -26,4 +26,6 @@ class User(models.Model):
 
   def __str__(self):
      return f"User {self.user_id} record {self.record}"
-  
+
+
+# Need to test User model 
