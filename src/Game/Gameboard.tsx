@@ -2,6 +2,7 @@ import React from "react";
 import { gameBoard } from "./Utils.js";
 
 export default function Gameboard() {
+  // Game Piece
   return (
     <section className='flex justify-center items-center '>
       <div className='grid grid-cols-8 border-4 border-black'>
