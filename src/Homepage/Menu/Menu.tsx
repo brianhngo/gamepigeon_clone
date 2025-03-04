@@ -10,7 +10,7 @@ export default function Menu() {
   const games: string[] = ["Checkers", "Chess"];
   const opponents: string[] = ["AI", "PvP"];
   const difficulties: string[] = ["Easy", "Medium", "Hard"];
-
+  // update
   const [userSelection, setUserSelection] = useState<{
     game: string;
     opponent: string;
